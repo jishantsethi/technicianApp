@@ -1,53 +1,47 @@
-import { FlatList, StyleSheet, Text, View, Pressable } from "react-native";
-import DATA, { Job } from "./data";
+import StatusBadge from "@/component/status-badge";
+import { useRouter } from "expo-router";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { Job, useJobs } from "../data/job";
 
 export default function Index() {
+
+  const { jobs, modifyJobs } = useJobs();
+
+  console.log("jobs are : "+ jobs.length)
   return (
     <View style={styles.container}>
-      <Text style={{ backgroundColor: 'lightgray', padding: 10, margin: 10 }}>Header</Text>
-      <FlatList data={DATA}
-        renderItem={(data) => <JobCard item={data.item} />}
+      <FlatList style={styles.list} data={jobs}
+        renderItem={(data) => <JobCard item={data.item} onPress={() =>
+          modifyJobs(data.item)
+        } />}
         keyExtractor={item => item.id}>
       </FlatList>
     </View>
   );
 }
 
-function JobCard(props: { item: Job }) {
+function JobCard(props: { item: Job, onPress: () => void }) {
+  const route = useRouter();
+  const handlePress = () => {
+    console.log(`Job ${props.item.id} pressed`);
+    // for going to another router using expo-route
+    route.push({ pathname: "/job-details", params: { jobId: props.item.id } });
+  };
+
+
   return (
-    <Pressable onPress={() => console.log(`Job ${props.item.id} pressed`)}
-      style={
-        ({ pressed }) => [{ opacity: pressed ? 0.5 : 1 }]
-      }>
+    <Pressable
+      onPress={handlePress}
+      style={({ pressed }) => [{ opacity: pressed ? 0.5 : 1 }]}
+    >
       <View style={[styles.item]}>
         <Text>{props.item.equipment}</Text>
         <Text>{props.item.customerName}</Text>
-        <StatusBadge status={props.item.status} />
+        <StatusBadge status={props.item.status} onPress={props.onPress} />
         <Text>{props.item.scheduleDate}</Text>
       </View>
     </Pressable>
-  )
-}
-
-function StatusBadge(props: { status: string }) {
-  const { status } = props;
-  let backgroundColor;
-  if (status === 'Pending') {
-    backgroundColor = 'yellow';
-  } else if (status === 'In Progress') {
-    backgroundColor = 'blue';
-  } else if (status === 'Completed') {
-    backgroundColor = 'green';
-  } else if (status === 'Cancelled') {
-    backgroundColor = 'red';
-  } else {
-    backgroundColor = 'gray';
-  }
-  return (
-    <View style={[styles.item, { backgroundColor: backgroundColor }]}>
-      <Text>{status}</Text>
-    </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -56,9 +50,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "column",
   },
+  list: {
+    width: "100%",
+  },
   item: {
-    backgroundColor: "#f9c2ff",
+    backgroundColor: "#fcfcfc",
     padding: 20,
-    marginVertical: 8,
+    borderRadius: 10,
+    margin: 10,
   }
 });

@@ -1,16 +1,77 @@
-import { View, Text } from "react-native";
-import DATA from "./data";
 
-export default function JobDetails({ params }: { params: { jobId: string } }) {
-  const jobId = '1'; // Replace with the actual jobId from params if needed
-  const job = DATA.find((job) => job.id === jobId);  
+import StatusBadge from "@/component/status-badge";
+import { useJobs } from "@/data/job";
+import { useLocalSearchParams } from "expo-router";
+import { StyleSheet, Text, View } from "react-native";
 
-  return (  
-    <View>
-        <Text>Job Details for Job ID: {jobId}</Text>    
-        <Text>Equipment: {job?.equipment}</Text>
-        <Text>Customer Name: {job?.customerName}</Text>
-        <Text>Status: {job?.status}</Text>  
+
+export default function JobDetails() {
+  const { jobId } = useLocalSearchParams<{ jobId: string }>()
+
+  const { jobs, modifyJobs } = useJobs();
+
+  const job = jobs.find((job) => job.id === jobId);
+
+  if (!job) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Job not found</Text>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.id}>Job ID: {job.id}</Text>
+      <Text style={styles.title}>Customer {job.customerName}</Text>
+      <Text style={styles.equipment}>Equipment {job.equipment}</Text>
+      <StatusBadge status={job.status} onPress={() => {
+        modifyJobs(job)
+      }} />
+      <View style={{ backgroundColor: 'grey', marginHorizontal: 10, height: 1, width: '100%' }}></View>
+      <View style={{ flexDirection: 'row', padding: 5 }}>
+        <Text accessibilityLabel="Calender" style={styles.homeIcon}>📅</Text>
+        <Text style={styles.date}>Schedule at : {job.scheduleDate}</Text>
+      </View>
+
     </View>
   )
-}       
+}
+
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'flex-start',
+    padding: 10,
+    margin: 5,
+    width: "100%",
+    borderRadius: 12,
+    backgroundColor: 'white',
+  },
+  id: {
+    fontSize: 16,
+    fontFamily: "Arial",
+    marginBottom: 10,
+    color: "grey"
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: 'black',
+  },
+  equipment: {
+    fontSize: 16,
+    marginBottom: 5,
+    color: 'black',
+  },
+  date: {
+    fontSize: 16,
+    marginLeft: 5,
+    color: 'black',
+  },
+  homeIcon: {
+    fontSize: 16,
+    color: 'black',
+  },
+});

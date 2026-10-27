@@ -7,7 +7,7 @@ export default function Index() {
 
   const { jobs, modifyJobs } = useJobs();
 
-  console.log("jobs are : "+ jobs.length)
+  console.log("jobs status is : " + jobs[0].status)
   return (
     <View style={styles.container}>
       <FlatList style={styles.list} data={jobs}

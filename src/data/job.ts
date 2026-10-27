@@ -122,12 +122,12 @@ export function useJobs() {
   const [jobs, setJobs] = useState<Job[]>(DATA);
 
   const modifyJobs = (newJob: Job) => {
-    for (let i = 0; i < DATA.length; i++) {
-      if (DATA[i].id == newJob.id && DATA[i].status == "Pending") {
-        DATA[i].status = "In Progress";
-      }
-      setJobs(DATA);
-    }
+    newJob.status = "Completed";
+    setJobs((currentJobs) =>
+      currentJobs.map((job) =>
+        job.id === newJob.id && job.status === "Pending" ? newJob : job,
+      ),
+    );
   };
 
   return { jobs, modifyJobs };

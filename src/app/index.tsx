@@ -1,13 +1,10 @@
 import StatusBadge from "@/component/StatusBadge";
 import { useRouter } from "expo-router";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
-import { Job } from "../data/job";
-import { modifyJobs } from "./features/jobs/jobsSlice";
+import { JobState, modifyJobs } from "./features/jobs/jobsSlice";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 
 export default function Index() {
-
-  //const {  modifyJobs } = useJobs();
 
   const jobs = useAppSelector(state => state.jobs);
   const dispatch = useAppDispatch();
@@ -25,7 +22,7 @@ export default function Index() {
   );
 }
 
-function JobCard(props: { item: Job, onPress: () => void }) {
+function JobCard(props: { item: JobState, onPress: () => void }) {
   const route = useRouter();
   const handlePress = () => {
     console.log(`Job ${props.item.id} pressed`);

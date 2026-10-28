@@ -1,12 +1,12 @@
-import { Status } from "@/data/job";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Status } from "../app/features/jobs/jobsSlice";
 
 export default function StatusBadge(props: { status: Status, onPress: () => void }) {
     const { status, onPress } = props;
     const backgroundColor = getStatusBackgroundColor(status);
     if (status === "Pending") {
         return (
-          <Pressable onPress={onPress}>
+            <Pressable onPress={onPress}>
                 <View style={[badgeStyle.container, { backgroundColor }]}>
                     <Text style={{ color: "#f9c2ff" }}>{status}</Text>
                 </View>

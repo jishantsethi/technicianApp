@@ -1,14 +1,16 @@
 
-import StatusBadge from "@/component/status-badge";
-import { useJobs } from "@/data/job";
+import StatusBadge from "@/component/StatusBadge";
 import { useLocalSearchParams } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
+import { modifyJobs } from "./features/jobs/jobsSlice";
+import { useAppDispatch, useAppSelector } from "./store/hooks";
 
 
 export default function JobDetails() {
   const { jobId } = useLocalSearchParams<{ jobId: string }>()
 
-  const { jobs, modifyJobs } = useJobs();
+  const jobs = useAppSelector(state => state.jobs);
+  const dispatch = useAppDispatch();
 
   const job = jobs.find((job) => job.id === jobId);
 
@@ -26,7 +28,7 @@ export default function JobDetails() {
       <Text style={styles.title}>Customer {job.customerName}</Text>
       <Text style={styles.equipment}>Equipment {job.equipment}</Text>
       <StatusBadge status={job.status} onPress={() => {
-        modifyJobs(job)
+        dispatch(modifyJobs(job))
       }} />
       <View style={{ backgroundColor: 'grey', marginHorizontal: 10, height: 1, width: '100%' }}></View>
       <View style={{ flexDirection: 'row', padding: 5 }}>

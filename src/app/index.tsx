@@ -1,18 +1,23 @@
-import StatusBadge from "@/component/status-badge";
+import StatusBadge from "@/component/StatusBadge";
 import { useRouter } from "expo-router";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
-import { Job, useJobs } from "../data/job";
+import { Job } from "../data/job";
+import { modifyJobs } from "./features/jobs/jobsSlice";
+import { useAppDispatch, useAppSelector } from "./store/hooks";
 
 export default function Index() {
 
-  const { jobs, modifyJobs } = useJobs();
+  //const {  modifyJobs } = useJobs();
 
-  console.log("jobs status is : " + jobs[0].status)
+  const jobs = useAppSelector(state => state.jobs);
+  const dispatch = useAppDispatch();
+
+  console.log("jobs size is : " + jobs.length)
   return (
     <View style={styles.container}>
       <FlatList style={styles.list} data={jobs}
         renderItem={(data) => <JobCard item={data.item} onPress={() =>
-          modifyJobs(data.item)
+          dispatch(modifyJobs(data.item))
         } />}
         keyExtractor={item => item.id}>
       </FlatList>
@@ -25,7 +30,7 @@ function JobCard(props: { item: Job, onPress: () => void }) {
   const handlePress = () => {
     console.log(`Job ${props.item.id} pressed`);
     // for going to another router using expo-route
-    route.push({ pathname: "/job-details", params: { jobId: props.item.id } });
+    route.push({ pathname: "/JobDetailsScreen", params: { jobId: props.item.id } });
   };
 
 

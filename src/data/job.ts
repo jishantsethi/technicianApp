@@ -122,10 +122,10 @@ export function useJobs() {
   const [jobs, setJobs] = useState<Job[]>(DATA);
 
   const modifyJobs = (newJob: Job) => {
-    newJob.status = "Completed";
+    const updatedJob: Job = { ...newJob, status: "Completed" };
     setJobs((currentJobs) =>
       currentJobs.map((job) =>
-        job.id === newJob.id && job.status === "Pending" ? newJob : job,
+        job.id === updatedJob.id && job.status === "Pending" ? updatedJob : job,
       ),
     );
   };

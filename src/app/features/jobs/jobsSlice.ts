@@ -1,10 +1,8 @@
-// interface JobState {
+
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-// }
-
-export type JobState = {
+export interface JobState {
     id: string;
     equipment: string;
     customerName: string;
